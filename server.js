@@ -45,14 +45,6 @@ const initDB = async () => {
         const db = await mysql.createConnection(dbConfig);
         app.locals.db = db;
         console.log('Database connected successfully');
-        
-        // Create admin user if not exists
-        const hashedPassword = await bcrypt.hash('Semoga777', 10);
-        await db.execute(`
-            INSERT IGNORE INTO users (username, password) 
-            VALUES ('admin', ?)
-        `, [hashedPassword]);
-        
     } catch (error) {
         console.error('Database connection failed:', error);
     }

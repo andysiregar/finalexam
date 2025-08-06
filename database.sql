@@ -21,5 +21,7 @@ CREATE TABLE IF NOT EXISTS employees (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Insert admin user with hashed password (password: Semoga777)
--- Note: The actual password hash will be created by the application
+-- Insert admin user with hashed password (username: admin, password: Semoga777)
+INSERT INTO users (username, password) VALUES 
+('admin', '$2b$10$ogTyb3Tbm70h8NxoqrlwK.e7UDS7NPwlh7.O3EC.1zACd9yIxMLJq') 
+ON DUPLICATE KEY UPDATE password = '$2b$10$ogTyb3Tbm70h8NxoqrlwK.e7UDS7NPwlh7.O3EC.1zACd9yIxMLJq';

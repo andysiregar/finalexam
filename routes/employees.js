@@ -58,8 +58,24 @@ router.post('/', async (req, res) => {
         const db = req.app.locals.db;
         const { name, phone, department, email, position } = req.body;
         
+        // Required field validation
         if (!name || !phone || !department) {
             return res.status(400).json({ error: 'Name, phone, and department are required' });
+        }
+
+        // Phone validation - allow numbers, spaces, +, -, (), but must contain at least 8 digits
+        const phoneRegex = /^[0-9+\-\s\(\)]+$/;
+        const phoneDigits = phone.replace(/[^0-9]/g, '');
+        if (!phoneRegex.test(phone) || phoneDigits.length < 8) {
+            return res.status(400).json({ error: 'Phone number must contain at least 8 digits and only numbers, +, -, spaces, parentheses' });
+        }
+
+        // Email validation if provided
+        if (email && email.trim() !== '') {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                return res.status(400).json({ error: 'Please provide a valid email address' });
+            }
         }
 
         const [result] = await db.execute(
@@ -85,8 +101,24 @@ router.put('/:id', async (req, res) => {
         const { id } = req.params;
         const { name, phone, department, email, position } = req.body;
         
+        // Required field validation
         if (!name || !phone || !department) {
             return res.status(400).json({ error: 'Name, phone, and department are required' });
+        }
+
+        // Phone validation - allow numbers, spaces, +, -, (), but must contain at least 8 digits
+        const phoneRegex = /^[0-9+\-\s\(\)]+$/;
+        const phoneDigits = phone.replace(/[^0-9]/g, '');
+        if (!phoneRegex.test(phone) || phoneDigits.length < 8) {
+            return res.status(400).json({ error: 'Phone number must contain at least 8 digits and only numbers, +, -, spaces, parentheses' });
+        }
+
+        // Email validation if provided
+        if (email && email.trim() !== '') {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                return res.status(400).json({ error: 'Please provide a valid email address' });
+            }
         }
 
         const [result] = await db.execute(
