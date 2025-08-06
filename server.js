@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+const RedisStore = require('connect-redis').default;
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 const employeeRoutes = require('./routes/employees');
@@ -13,8 +14,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Session configuration
+// Session configuration with Redis store
 app.use(session({
+    store: new RedisStore({ client: redisClient }),
     secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
