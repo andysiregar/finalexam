@@ -14,10 +14,31 @@ class EmployeeManager {
         const form = document.getElementById('employeeForm');
         const searchInput = document.getElementById('searchInput');
         const cancelBtn = document.getElementById('cancelBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
 
         form.addEventListener('submit', (e) => this.handleSubmit(e));
         searchInput.addEventListener('input', (e) => this.handleSearch(e));
         cancelBtn.addEventListener('click', () => this.cancelEdit());
+        logoutBtn.addEventListener('click', () => this.handleLogout());
+    }
+
+    async handleLogout() {
+        try {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                window.location.href = '/login';
+            } else {
+                this.showError('Logout failed');
+            }
+        } catch (error) {
+            this.showError('Network error during logout');
+        }
     }
 
     async handleSubmit(e) {

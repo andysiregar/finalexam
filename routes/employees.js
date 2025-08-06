@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/database');
 const redisClient = require('../config/redis');
+const { requireAuthAPI } = require('../middleware/auth');
+
+// Apply authentication middleware to all routes
+router.use(requireAuthAPI);
 
 router.get('/', async (req, res) => {
     try {
+        const db = req.app.locals.db;
         const cacheKey = 'employees:all';
         const cached = await redisClient.get(cacheKey);
         
@@ -25,6 +29,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
+        const db = req.app.locals.db;
         const { id } = req.params;
         const cacheKey = `employee:${id}`;
         const cached = await redisClient.get(cacheKey);
@@ -50,6 +55,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
+        const db = req.app.locals.db;
         const { name, phone, department, email, position } = req.body;
         
         if (!name || !phone || !department) {
@@ -75,6 +81,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
+        const db = req.app.locals.db;
         const { id } = req.params;
         const { name, phone, department, email, position } = req.body;
         
@@ -103,6 +110,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
+        const db = req.app.locals.db;
         const { id } = req.params;
 
         const [result] = await db.execute('DELETE FROM employees WHERE id = ?', [id]);
